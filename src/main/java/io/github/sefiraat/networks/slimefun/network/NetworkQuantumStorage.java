@@ -39,9 +39,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class NetworkQuantumStorage extends SlimefunItem implements DistinctiveItem {
 
@@ -93,7 +93,7 @@ public class NetworkQuantumStorage extends SlimefunItem implements DistinctiveIt
     private static final int[] OUTPUT_SLOTS = new int[] { 6, 8 };
     private static final int[] BACKGROUND_SLOTS = new int[] { 9, 10, 11, 12, 14, 15, 16, 17 };
 
-    private static final Map<Location, QuantumCache> CACHES = new HashMap<>();
+    private static final Map<Location, QuantumCache> CACHES = new ConcurrentHashMap<>();
 
     static {
         final ItemMeta itemMeta = NO_ITEM.getItemMeta();

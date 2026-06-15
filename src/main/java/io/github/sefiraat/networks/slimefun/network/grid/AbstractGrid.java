@@ -309,7 +309,7 @@ public abstract class AbstractGrid extends NetworkObject {
     private void setCursor(Player player, ItemStack cursor, ItemStack requestingStack) {
         if (requestingStack != null) {
             if (cursor.getType() != Material.AIR) {
-                requestingStack.setAmount(cursor.getAmount() + 1);
+                requestingStack.setAmount(cursor.getAmount() + requestingStack.getAmount());
             }
             player.setItemOnCursor(requestingStack);
         }
