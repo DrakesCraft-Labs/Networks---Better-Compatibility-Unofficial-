@@ -24,8 +24,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nonnull;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class NetworkCraftingGrid extends AbstractGrid {
 
@@ -57,7 +57,7 @@ public class NetworkCraftingGrid extends AbstractGrid {
         Theme.CLICK_INFO + "Shift Left Click: " + Theme.PASSIVE + "Try to return items"
     );
 
-    private static final Map<Location, GridCache> CACHE_MAP = new HashMap<>();
+    private static final Map<Location, GridCache> CACHE_MAP = new ConcurrentHashMap<>();
 
 
     public NetworkCraftingGrid(ItemGroup itemGroup, SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe) {
@@ -134,7 +134,8 @@ public class NetworkCraftingGrid extends AbstractGrid {
 
                 for (int displaySlot : getDisplaySlots()) {
                     menu.replaceExistingItem(displaySlot, null);
-                    menu.addMenuClickHandler(displaySlot, (p, slot, item, action) -> false);
+                    menu.addMenuClickHandler(displaySlot,
+                            (player, slot, item, action) -> handleDisplayClick(player, item, action, menu));
                 }
 
                 menu.replaceExistingItem(CRAFT_BUTTON_SLOT, CRAFT_BUTTON_STACK);
@@ -189,6 +190,11 @@ public class NetworkCraftingGrid extends AbstractGrid {
     @Override
     protected int getFilterSlot() {
         return FILTER;
+    }
+
+    @Override
+    protected void clearCachedState(@Nonnull Location location) {
+        CACHE_MAP.remove(location);
     }
 
     private void tryCraft(@Nonnull BlockMenu menu, @Nonnull Player player) {

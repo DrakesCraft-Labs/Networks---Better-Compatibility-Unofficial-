@@ -93,9 +93,10 @@ public abstract class NetworkObject extends SlimefunItem implements AdminDebugga
     }
 
     protected void addToRegistry(@Nonnull Block block) {
-        if (!NetworkStorage.getAllNetworkObjects().containsKey(block.getLocation())) {
-            final NodeDefinition nodeDefinition = new NodeDefinition(nodeType);
-            NetworkStorage.getAllNetworkObjects().put(block.getLocation(), nodeDefinition);
+        final Location location = block.getLocation();
+        final NodeDefinition nodeDefinition = new NodeDefinition(nodeType);
+        if (NetworkStorage.getAllNetworkObjects().putIfAbsent(location, nodeDefinition) == null) {
+            NetworkController.markDirty(location);
         }
     }
 
@@ -112,13 +113,17 @@ public abstract class NetworkObject extends SlimefunItem implements AdminDebugga
                 blockMenu.dropItems(location, i);
             }
         }
-        // NetworkStorage.removeNode(location);
-        //
-        // if (this.nodeType == NodeType.CONTROLLER) {
-        // NetworkController.wipeNetwork(location);
-        // }
+        NetworkController.markDirty(location);
+        if (this.nodeType == NodeType.CONTROLLER) {
+            NetworkController.wipeNetwork(location);
+        }
+        NetworkStorage.removeNode(location);
+        clearCachedState(location);
 
         BlockStorage.clearBlockInfo(location);
+    }
+
+    protected void clearCachedState(@Nonnull Location location) {
     }
 
     protected void prePlace(@Nonnull PlayerRightClickEvent event) {
