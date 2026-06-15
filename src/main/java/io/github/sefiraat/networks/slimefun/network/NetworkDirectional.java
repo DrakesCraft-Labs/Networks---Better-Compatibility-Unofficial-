@@ -282,6 +282,12 @@ public abstract class NetworkDirectional extends NetworkObject {
     public void setDirection(BlockMenu blockMenu, BlockFace blockFace) {
         SELECTED_DIRECTION_MAP.put(blockMenu.getLocation().clone(), blockFace);
         BlockStorage.addBlockInfo(blockMenu.getBlock(), DIRECTION, blockFace.name());
+        NetworkController.markDirty(blockMenu.getLocation());
+    }
+
+    @Override
+    protected void clearCachedState(@Nonnull Location location) {
+        SELECTED_DIRECTION_MAP.remove(location);
     }
 
     @Nonnull

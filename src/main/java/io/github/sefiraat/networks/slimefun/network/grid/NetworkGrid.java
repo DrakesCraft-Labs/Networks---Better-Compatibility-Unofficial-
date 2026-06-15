@@ -108,7 +108,7 @@ public class NetworkGrid extends AbstractGrid {
                 });
 
                 for (int displaySlot : getDisplaySlots()) {
-                    menu.replaceExistingItem(displaySlot, null);
+                    menu.replaceExistingItem(displaySlot, BLANK_SLOT_STACK);
                     menu.addMenuClickHandler(displaySlot,
                             (player, slot, item, action) -> handleDisplayClick(player, item, action, menu));
                 }

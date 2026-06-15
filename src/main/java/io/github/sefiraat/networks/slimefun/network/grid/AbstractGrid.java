@@ -42,7 +42,7 @@ import java.util.Map;
 
 public abstract class AbstractGrid extends NetworkObject {
 
-    private static final CustomItemStack BLANK_SLOT_STACK = new CustomItemStack(
+    protected static final CustomItemStack BLANK_SLOT_STACK = new CustomItemStack(
             Material.LIGHT_GRAY_STAINED_GLASS_PANE,
             " ");
 

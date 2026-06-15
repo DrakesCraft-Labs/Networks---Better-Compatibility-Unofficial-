@@ -394,7 +394,7 @@ public class NetworkRoot extends NetworkNode {
         return new InfinityBarrel(
                 blockMenu.getLocation(),
                 clone,
-                storedInt + itemStack.getAmount(),
+                storedInt,
                 cache);
     }
 
@@ -477,7 +477,7 @@ public class NetworkRoot extends NetworkNode {
      *         found. Null if none.
      */
     @Nullable
-    public ItemStack getItemStack(@Nonnull ItemRequest request) {
+    public synchronized ItemStack getItemStack(@Nonnull ItemRequest request) {
         ItemStack stackToReturn = null;
 
         // Cells first
@@ -641,7 +641,40 @@ public class NetworkRoot extends NetworkNode {
         return stackToReturn;
     }
 
-    public boolean contains(@Nonnull ItemRequest[] requests) {
+    @Nullable
+    public synchronized ItemStack[] getItemStacks(@Nonnull ItemRequest[] requests) {
+        final ItemStack[] extracted = new ItemStack[requests.length];
+
+        for (int i = 0; i < requests.length; i++) {
+            final ItemRequest request = requests[i];
+            if (request == null) {
+                continue;
+            }
+
+            final int requestedAmount = request.getAmount();
+            final ItemRequest transactionRequest = new ItemRequest(request.getItemStack(), requestedAmount);
+            final ItemStack fetched = getItemStack(transactionRequest);
+            if (fetched == null || fetched.getAmount() != requestedAmount) {
+                if (fetched != null) {
+                    addItemStack(fetched);
+                }
+                rollbackExtracted(extracted);
+                return null;
+            }
+            extracted[i] = fetched;
+        }
+        return extracted;
+    }
+
+    private void rollbackExtracted(ItemStack[] extracted) {
+        for (ItemStack itemStack : extracted) {
+            if (itemStack != null) {
+                addItemStack(itemStack);
+            }
+        }
+    }
+
+    public synchronized boolean contains(@Nonnull ItemRequest[] requests) {
         for (ItemRequest request : requests) {
             if (!contains(request)) {
                 return false;
@@ -650,7 +683,7 @@ public class NetworkRoot extends NetworkNode {
         return true;
     }
 
-    public boolean contains(@Nonnull ItemRequest request) {
+    public synchronized boolean contains(@Nonnull ItemRequest request) {
         int found = 0;
 
         // Cells first
@@ -733,7 +766,8 @@ public class NetworkRoot extends NetworkNode {
         return false;
     }
 
-    public void addItemStack(@Nonnull ItemStack incoming) {
+    @Nullable
+    public synchronized ItemStack addItemStack(@Nonnull ItemStack incoming) {
         // Run for matching greedy blocks
         for (BlockMenu blockMenu : getGreedyBlocks()) {
             final ItemStack template = blockMenu.getItemInSlot(NetworkGreedyBlock.TEMPLATE_SLOT);
@@ -747,7 +781,7 @@ public class NetworkRoot extends NetworkNode {
             if (itemStack == null || itemStack.getType() == Material.AIR) {
                 blockMenu.replaceExistingItem(NetworkGreedyBlock.INPUT_SLOT, incoming.clone());
                 incoming.setAmount(0);
-                return;
+                return null;
             }
 
             final int itemStackAmount = itemStack.getAmount();
@@ -761,7 +795,7 @@ public class NetworkRoot extends NetworkNode {
             }
             // Given we have found a match, it doesn't matter if the item moved or not, we
             // will not bring it in
-            return;
+            return incoming.getAmount() > 0 ? incoming : null;
         }
 
         // Run for matching barrels
@@ -772,7 +806,7 @@ public class NetworkRoot extends NetworkNode {
 
                 // All distributed, can escape
                 if (incoming.getAmount() == 0) {
-                    return;
+                    return null;
                 }
             }
         }
@@ -810,7 +844,7 @@ public class NetworkRoot extends NetworkNode {
 
                     // All distributed, can escape
                     if (incoming.getAmount() == 0) {
-                        return;
+                        return null;
                     }
                 }
                 i++;
@@ -822,6 +856,7 @@ public class NetworkRoot extends NetworkNode {
             fallbackBlockMenu.replaceExistingItem(fallBackSlot, incoming.clone());
             incoming.setAmount(0);
         }
+        return incoming.getAmount() > 0 ? incoming : null;
     }
 
     @Override

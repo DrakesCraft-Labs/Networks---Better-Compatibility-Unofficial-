@@ -107,7 +107,7 @@ public class NetworkQuantumWorkbench extends SlimefunItem {
         final ItemStack itemInOutput = menu.getItemInSlot(OUTPUT_SLOT);
 
         // Quick escape, we only allow crafting if the output is empty
-        if (itemInOutput != null) {
+        if (itemInOutput != null && itemInOutput.getType() != Material.AIR) {
             return;
         }
 
