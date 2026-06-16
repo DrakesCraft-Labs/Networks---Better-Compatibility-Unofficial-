@@ -95,7 +95,7 @@ public class NetworkExport extends NetworkObject {
     private void tryFetchItem(@Nonnull BlockMenu blockMenu) {
         final NodeDefinition definition = NetworkStorage.getAllNetworkObjects().get(blockMenu.getLocation());
 
-        if (definition.getNode() == null) {
+        if (definition == null || definition.getNode() == null) {
             return;
         }
 
@@ -111,7 +111,11 @@ public class NetworkExport extends NetworkObject {
         ItemRequest itemRequest = new ItemRequest(clone, clone.getMaxStackSize());
         ItemStack retrieved = definition.getNode().getRoot().getItemStack(itemRequest);
         if (retrieved != null) {
-            blockMenu.pushItem(retrieved, OUTPUT_ITEM_SLOT);
+            final ItemStack leftover = blockMenu.pushItem(retrieved, OUTPUT_ITEM_SLOT);
+            if (leftover != null && leftover.getAmount() > 0) {
+                // Output slot filled between check and push; return to network
+                definition.getNode().getRoot().addItemStack(leftover);
+            }
         }
     }
 

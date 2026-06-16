@@ -128,7 +128,12 @@ public abstract class AbstractGrid extends NetworkObject {
             return;
         }
 
-        definition.getNode().getRoot().addItemStack(itemStack);
+        final ItemStack leftover = definition.getNode().getRoot().addItemStack(itemStack);
+        if (leftover == null || leftover.getAmount() == 0) {
+            blockMenu.replaceExistingItem(getInputSlot(), null);
+        } else {
+            itemStack.setAmount(leftover.getAmount());
+        }
     }
 
     protected void updateDisplay(@Nonnull BlockMenu blockMenu) {

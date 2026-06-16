@@ -28,7 +28,10 @@ public class InfinityBarrel extends BarrelIdentity {
     @Override
     public ItemStack requestItem(@Nonnull ItemRequest itemRequest) {
         BlockMenu blockMenu = BlockStorage.getInventory(this.getLocation());
-        return blockMenu == null ? null : blockMenu.getItemInSlot(this.getOutputSlot());
+        if (blockMenu == null) return null;
+        final ItemStack live = blockMenu.getItemInSlot(this.getOutputSlot());
+        // Return a clone so callers cannot corrupt the live slot via setAmount()
+        return live == null ? null : live.clone();
     }
 
     @Override

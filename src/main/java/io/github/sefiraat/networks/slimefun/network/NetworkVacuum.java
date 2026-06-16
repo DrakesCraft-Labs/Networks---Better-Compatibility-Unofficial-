@@ -107,7 +107,7 @@ public class NetworkVacuum extends NetworkObject {
     private void tryAddItem(@Nonnull BlockMenu blockMenu) {
         final NodeDefinition definition = NetworkStorage.getAllNetworkObjects().get(blockMenu.getLocation());
 
-        if (definition.getNode() == null) {
+        if (definition == null || definition.getNode() == null) {
             return;
         }
 
@@ -117,7 +117,12 @@ public class NetworkVacuum extends NetworkObject {
             if (itemStack == null || itemStack.getType() == Material.AIR) {
                 continue;
             }
-            definition.getNode().getRoot().addItemStack(itemStack);
+            final ItemStack leftover = definition.getNode().getRoot().addItemStack(itemStack);
+            if (leftover == null || leftover.getAmount() == 0) {
+                blockMenu.replaceExistingItem(inputSlot, null);
+            } else {
+                itemStack.setAmount(leftover.getAmount());
+            }
         }
     }
 

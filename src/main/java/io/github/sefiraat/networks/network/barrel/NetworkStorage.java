@@ -40,6 +40,7 @@ public class NetworkStorage extends BarrelIdentity {
     public void depositItemStack(ItemStack[] itemsToDeposit) {
         if (BlockStorage.check(this.getLocation()) instanceof NetworkQuantumStorage) {
             final BlockMenu blockMenu = BlockStorage.getInventory(this.getLocation());
+            if (blockMenu == null) return;
             final QuantumCache cache = NetworkQuantumStorage.getCaches().get(this.getLocation());
             if (cache != null) {
                 NetworkQuantumStorage.tryInputItem(blockMenu.getLocation(), itemsToDeposit, cache);
