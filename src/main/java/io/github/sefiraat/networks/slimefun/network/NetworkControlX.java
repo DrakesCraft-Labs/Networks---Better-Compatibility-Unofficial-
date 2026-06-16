@@ -116,7 +116,7 @@ public class NetworkControlX extends NetworkDirectional {
         boolean mustMatch = templateStack != null && !templateStack.getType().isAir();
 
         if ((mustMatch && (targetBlock.getType() != templateStack.getType()))
-            || (SlimefunItem.getByItem(templateStack) != null)
+            || (mustMatch && SlimefunItem.getByItem(templateStack) != null)
         ) {
             return;
         }

@@ -73,7 +73,9 @@ public class NetworkExport extends NetworkObject {
                         if (tick <= 1) {
                             final BlockMenu blockMenu = BlockStorage.getInventory(block);
                             addToRegistry(block);
-                            tryFetchItem(blockMenu);
+                            if (blockMenu != null) {
+                                tryFetchItem(blockMenu);
+                            }
                         }
                     }
 
@@ -86,8 +88,10 @@ public class NetworkExport extends NetworkObject {
                     @Override
                     public void onPlayerBreak(BlockBreakEvent e, ItemStack item, List<ItemStack> drops) {
                         BlockMenu blockMenu = BlockStorage.getInventory(e.getBlock());
-                        blockMenu.dropItems(blockMenu.getLocation(), TEST_ITEM_SLOT);
-                        blockMenu.dropItems(blockMenu.getLocation(), OUTPUT_ITEM_SLOT);
+                        if (blockMenu != null) {
+                            blockMenu.dropItems(blockMenu.getLocation(), TEST_ITEM_SLOT);
+                            blockMenu.dropItems(blockMenu.getLocation(), OUTPUT_ITEM_SLOT);
+                        }
                     }
                 });
     }

@@ -104,8 +104,10 @@ public abstract class AbstractGrid extends NetworkObject {
                         if (tick <= 1) {
                             final BlockMenu blockMenu = BlockStorage.getInventory(block);
                             addToRegistry(block);
-                            tryAddItem(blockMenu);
-                            updateDisplay(blockMenu);
+                            if (blockMenu != null) {
+                                tryAddItem(blockMenu);
+                                updateDisplay(blockMenu);
+                            }
                         }
                     }
 

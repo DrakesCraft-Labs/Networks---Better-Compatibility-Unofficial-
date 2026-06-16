@@ -104,12 +104,10 @@ public class NetworkWirelessTransmitter extends NetworkObject {
                             int tick = tickMap.getOrDefault(block.getLocation(), 0);
                             if (tick >= TICKS_PER) {
                                 onTick(blockMenu);
-                                tickMap.remove(block.getLocation());
-                                tick = 0;
+                                tickMap.put(block.getLocation(), 0);
                             } else {
-                                tick++;
+                                tickMap.put(block.getLocation(), tick + 1);
                             }
-                            tickMap.put(block.getLocation(), tick + 1);
                         }
                     }
                 });

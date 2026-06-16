@@ -56,7 +56,9 @@ public class NetworkImport extends NetworkObject {
                         if (tick <= 1) {
                             final BlockMenu blockMenu = BlockStorage.getInventory(block);
                             addToRegistry(block);
-                            tryAddItem(blockMenu);
+                            if (blockMenu != null) {
+                                tryAddItem(blockMenu);
+                            }
                         }
                     }
 
