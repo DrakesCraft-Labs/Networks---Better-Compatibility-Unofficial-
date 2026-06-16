@@ -642,7 +642,7 @@ public class NetworkRoot extends NetworkNode {
     }
 
     @Nullable
-    public synchronized ItemStack[] getItemStacks(@Nonnull ItemRequest[] requests) {
+    public synchronized ItemStack[] getItemStacks(@Nonnull ItemRequest[] requests, @Nonnull Location dropLocation) {
         final ItemStack[] extracted = new ItemStack[requests.length];
 
         for (int i = 0; i < requests.length; i++) {
@@ -658,7 +658,7 @@ public class NetworkRoot extends NetworkNode {
                 if (fetched != null) {
                     addItemStack(fetched);
                 }
-                rollbackExtracted(extracted);
+                rollbackExtracted(extracted, dropLocation);
                 return null;
             }
             extracted[i] = fetched;
@@ -666,10 +666,13 @@ public class NetworkRoot extends NetworkNode {
         return extracted;
     }
 
-    private void rollbackExtracted(ItemStack[] extracted) {
+    private void rollbackExtracted(ItemStack[] extracted, @Nonnull Location dropLocation) {
         for (ItemStack itemStack : extracted) {
             if (itemStack != null) {
-                addItemStack(itemStack);
+                final ItemStack leftover = addItemStack(itemStack);
+                if (leftover != null && leftover.getAmount() > 0) {
+                    dropLocation.getWorld().dropItemNaturally(dropLocation, leftover.clone());
+                }
             }
         }
     }

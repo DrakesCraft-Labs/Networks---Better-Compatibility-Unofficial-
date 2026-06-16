@@ -168,7 +168,7 @@ public class NetworkAutoCrafter extends NetworkObject {
             }
         }
 
-        final ItemStack[] extracted = root.getItemStacks(requests);
+        final ItemStack[] extracted = root.getItemStacks(requests, blockMenu.getLocation());
         if (extracted == null) {
             return false;
         }

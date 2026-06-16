@@ -96,7 +96,10 @@ public class NetworkPusher extends NetworkDirectional {
                 final int insertedAmount = leftover == null ? retrievedAmount : retrievedAmount - leftover.getAmount();
 
                 if (leftover != null && leftover.getAmount() > 0) {
-                    definition.getNode().getRoot().addItemStack(leftover);
+                    final ItemStack remaining = definition.getNode().getRoot().addItemStack(leftover);
+                    if (remaining != null && remaining.getAmount() > 0) {
+                        blockMenu.getLocation().getWorld().dropItemNaturally(blockMenu.getLocation(), remaining.clone());
+                    }
                 }
 
                 if (insertedAmount > 0 && definition.getNode().getRoot().isDisplayParticles()) {

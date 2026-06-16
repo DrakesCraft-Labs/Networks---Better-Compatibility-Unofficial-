@@ -252,7 +252,7 @@ public class NetworkCraftingGrid extends AbstractGrid {
         }
 
         final ItemStack[] refills = definition.getNode().getRoot()
-                .getItemStacks(refillRequests.toArray(new ItemRequest[0]));
+                .getItemStacks(refillRequests.toArray(new ItemRequest[0]), menu.getLocation());
         if (refills == null) {
             return;
         }
@@ -261,7 +261,7 @@ public class NetworkCraftingGrid extends AbstractGrid {
         final ItemStack outputLeftover = menu.pushItem(crafted, CRAFT_OUTPUT_SLOT);
         if (outputLeftover != null && outputLeftover.getAmount() > 0) {
             if (outputLeftover.getAmount() == craftedAmount) {
-                returnRefills(definition, refills);
+                returnRefills(definition, refills, menu.getLocation());
                 return;
             }
             menu.getLocation().getWorld().dropItemNaturally(menu.getLocation(), outputLeftover.clone());
@@ -279,10 +279,14 @@ public class NetworkCraftingGrid extends AbstractGrid {
         }
     }
 
-    private void returnRefills(@Nonnull NodeDefinition definition, @Nonnull ItemStack[] refills) {
+    private void returnRefills(@Nonnull NodeDefinition definition, @Nonnull ItemStack[] refills,
+            @Nonnull Location origin) {
         for (ItemStack refill : refills) {
             if (refill != null) {
-                definition.getNode().getRoot().addItemStack(refill);
+                final ItemStack leftover = definition.getNode().getRoot().addItemStack(refill);
+                if (leftover != null && leftover.getAmount() > 0) {
+                    origin.getWorld().dropItemNaturally(origin, leftover.clone());
+                }
             }
         }
     }
@@ -295,13 +299,17 @@ public class NetworkCraftingGrid extends AbstractGrid {
             return;
         }
 
+        final Location origin = menu.getLocation();
         for (int recipeSlot : CRAFT_ITEMS) {
             final ItemStack stack = menu.getItemInSlot(recipeSlot);
 
             if (stack == null || stack.getType() == Material.AIR) {
                 continue;
             }
-            definition.getNode().getRoot().addItemStack(stack);
+            final ItemStack leftover = definition.getNode().getRoot().addItemStack(stack);
+            if (leftover != null && leftover.getAmount() > 0) {
+                origin.getWorld().dropItemNaturally(origin, leftover.clone());
+            }
         }
     }
 }
