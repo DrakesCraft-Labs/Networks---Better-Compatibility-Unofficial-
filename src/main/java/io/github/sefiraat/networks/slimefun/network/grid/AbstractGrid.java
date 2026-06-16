@@ -70,9 +70,10 @@ public abstract class AbstractGrid extends NetworkObject {
                     return ChatColor.stripColor(slimefunItem.getItemName());
                 } else {
                     ItemMeta itemMeta = itemStackIntegerEntry.getKey().getItemMeta();
-                    return itemMeta.hasDisplayName()
-                            ? ChatColor.stripColor(itemMeta.getDisplayName())
-                            : itemStackIntegerEntry.getKey().getType().name();
+                    if (itemMeta == null || !itemMeta.hasDisplayName()) {
+                        return itemStackIntegerEntry.getKey().getType().name();
+                    }
+                    return ChatColor.stripColor(itemMeta.getDisplayName());
                 }
             });
 
@@ -123,7 +124,7 @@ public abstract class AbstractGrid extends NetworkObject {
         }
 
         final NodeDefinition definition = NetworkStorage.getAllNetworkObjects().get(blockMenu.getLocation());
-        if (definition.getNode() == null) {
+        if (definition == null || definition.getNode() == null) {
             return;
         }
 

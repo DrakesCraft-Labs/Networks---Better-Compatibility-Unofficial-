@@ -737,7 +737,12 @@ public class NetworkRoot extends NetworkNode {
 
             if (barrelIdentity instanceof InfinityBarrel) {
                 if (barrelIdentity.getItemStack().getMaxStackSize() > 1) {
-                    found += barrelIdentity.getAmount() - 2;
+                    // Reserve 2 items so we never report the barrel as fully extractable;
+                    // clamp to 0 to avoid negative contributions when nearly empty
+                    found += Math.max(0, barrelIdentity.getAmount() - 2);
+                } else {
+                    // Non-stackable items: each unit is independently extractable
+                    found += barrelIdentity.getAmount();
                 }
             } else {
                 found += barrelIdentity.getAmount();

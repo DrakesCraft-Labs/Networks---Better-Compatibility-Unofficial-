@@ -106,7 +106,9 @@ public class NetworkAutoCrafter extends NetworkObject {
         if (!this.withholding) {
             final ItemStack stored = blockMenu.getItemInSlot(OUTPUT_SLOT);
             if (stored != null && stored.getType() != Material.AIR) {
-                root.addItemStack(stored);
+                final ItemStack leftover = root.addItemStack(stored);
+                // Replace slot with whatever couldn't fit in the network (null clears slot)
+                blockMenu.replaceExistingItem(OUTPUT_SLOT, (leftover != null && leftover.getAmount() > 0) ? leftover : null);
             }
         }
 
@@ -118,7 +120,7 @@ public class NetworkAutoCrafter extends NetworkObject {
 
         final long networkCharge = root.getRootPower();
 
-        if (networkCharge > this.chargePerCraft) {
+        if (networkCharge >= this.chargePerCraft) {
             final SlimefunItem item = SlimefunItem.getByItem(blueprint);
 
             if (!(item instanceof CraftingBlueprint)) {
