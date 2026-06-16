@@ -81,7 +81,9 @@ public class NetworkPurger extends NetworkObject {
                     @Override
                     public void onPlayerBreak(BlockBreakEvent e, ItemStack item, List<ItemStack> drops) {
                         BlockMenu blockMenu = BlockStorage.getInventory(e.getBlock());
-                        blockMenu.dropItems(blockMenu.getLocation(), TEST_ITEM_SLOT);
+                        if (blockMenu != null) {
+                            blockMenu.dropItems(blockMenu.getLocation(), TEST_ITEM_SLOT);
+                        }
                     }
                 });
     }

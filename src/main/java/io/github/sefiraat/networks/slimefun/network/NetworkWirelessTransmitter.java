@@ -137,6 +137,9 @@ public class NetworkWirelessTransmitter extends NetworkObject {
         }
 
         final BlockMenu linkedBlockMenu = BlockStorage.getInventory(linkedLocation);
+        if (linkedBlockMenu == null) {
+            return;
+        }
         final ItemStack itemStack = linkedBlockMenu.getItemInSlot(NetworkWirelessReceiver.RECEIVED_SLOT);
 
         if (itemStack == null || itemStack.getType() == Material.AIR) {
@@ -155,7 +158,10 @@ public class NetworkWirelessTransmitter extends NetworkObject {
 
             if (stackToPush != null) {
                 definition.getNode().getRoot().removeRootPower(REQUIRED_POWER);
-                linkedBlockMenu.pushItem(stackToPush, NetworkWirelessReceiver.RECEIVED_SLOT);
+                final ItemStack leftover = linkedBlockMenu.pushItem(stackToPush, NetworkWirelessReceiver.RECEIVED_SLOT);
+                if (leftover != null && leftover.getAmount() > 0) {
+                    definition.getNode().getRoot().addItemStack(leftover);
+                }
                 if (definition.getNode().getRoot().isDisplayParticles()) {
                     final Location particleLocation = blockMenu.getLocation().clone().add(0.5, 1.1, 0.5);
                     final Location particleLocation2 = linkedBlockMenu.getLocation().clone().add(0.5, 2.1, 0.5);

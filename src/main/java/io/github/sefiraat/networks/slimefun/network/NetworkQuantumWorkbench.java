@@ -141,7 +141,7 @@ public class NetworkQuantumWorkbench extends SlimefunItem {
                 final NetworkQuantumStorage newQuantum = (NetworkQuantumStorage) SlimefunItem.getByItem(crafted);
                 final QuantumCache oldCache = DataTypeMethods.getCustom(oldMeta, Keys.QUANTUM_STORAGE_INSTANCE, PersistentQuantumStorageType.TYPE);
 
-                if (oldCache != null) {
+                if (oldCache != null && oldCache.getItemStack() != null) {
                     final QuantumCache newCache = new QuantumCache(
                         oldCache.getItemStack().clone(),
                         oldCache.getAmount(),
@@ -177,8 +177,10 @@ public class NetworkQuantumWorkbench extends SlimefunItem {
             @Override
             public void onPlayerBreak(BlockBreakEvent event, ItemStack itemStack, List<ItemStack> drops) {
                 BlockMenu menu = BlockStorage.getInventory(event.getBlock());
-                menu.dropItems(menu.getLocation(), RECIPE_SLOTS);
-                menu.dropItems(menu.getLocation(), OUTPUT_SLOT);
+                if (menu != null) {
+                    menu.dropItems(menu.getLocation(), RECIPE_SLOTS);
+                    menu.dropItems(menu.getLocation(), OUTPUT_SLOT);
+                }
             }
         };
     }
