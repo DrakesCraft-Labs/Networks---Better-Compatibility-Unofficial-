@@ -167,7 +167,14 @@ public abstract class NetworkDirectional extends NetworkObject {
         BlockFace direction = SELECTED_DIRECTION_MAP.get(blockMenu.getLocation().clone());
 
         if (direction == null) {
-            direction = BlockFace.valueOf(BlockStorage.getLocationInfo(blockMenu.getLocation(), DIRECTION));
+            final String stored = BlockStorage.getLocationInfo(blockMenu.getLocation(), DIRECTION);
+            if (stored == null) {
+                // Block placed before direction key existed; set default
+                direction = BlockFace.SELF;
+                BlockStorage.addBlockInfo(blockMenu.getLocation(), DIRECTION, BlockFace.SELF.name());
+            } else {
+                direction = BlockFace.valueOf(stored);
+            }
             SELECTED_DIRECTION_MAP.put(blockMenu.getLocation().clone(), direction);
         }
         return direction;

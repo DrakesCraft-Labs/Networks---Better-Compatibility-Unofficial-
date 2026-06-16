@@ -118,7 +118,11 @@ public class NetworkExport extends NetworkObject {
             final ItemStack leftover = blockMenu.pushItem(retrieved, OUTPUT_ITEM_SLOT);
             if (leftover != null && leftover.getAmount() > 0) {
                 // Output slot filled between check and push; return to network
-                definition.getNode().getRoot().addItemStack(leftover);
+                final ItemStack secondLeftover = definition.getNode().getRoot().addItemStack(leftover);
+                if (secondLeftover != null && secondLeftover.getAmount() > 0) {
+                    // Network also full; drop so item isn't lost
+                    blockMenu.getLocation().getWorld().dropItemNaturally(blockMenu.getLocation(), secondLeftover);
+                }
             }
         }
     }
