@@ -88,19 +88,27 @@ public class QuantumCache extends ItemStackCache {
     public void addMetaLore(ItemMeta itemMeta) {
         final List<String> lore = itemMeta.hasLore() ? itemMeta.getLore() : new ArrayList<>();
         lore.add("");
-        lore.add(Theme.CLICK_INFO + "Holding: " +
-                     (this.getItemMeta() != null && this.getItemMeta().hasDisplayName() ? this.getItemMeta().getDisplayName() : this.getItemStack().getType().name())
-        );
+        lore.add(Theme.CLICK_INFO + "Holding: " + getDisplayName());
         lore.add(Theme.CLICK_INFO + "Amount: " + this.getAmount());
         itemMeta.setLore(lore);
     }
 
     public void updateMetaLore(ItemMeta itemMeta) {
         final List<String> lore = itemMeta.hasLore() ? itemMeta.getLore() : new ArrayList<>();
-        lore.set(lore.size() - 2,Theme.CLICK_INFO + "Holding: " +
-                     (this.getItemMeta() != null && this.getItemMeta().hasDisplayName() ? this.getItemMeta().getDisplayName() : this.getItemStack().getType().name())
-        );
+        if (lore.size() < 2) {
+            // Lore is shorter than expected — rebuild from scratch
+            addMetaLore(itemMeta);
+            return;
+        }
+        lore.set(lore.size() - 2, Theme.CLICK_INFO + "Holding: " + getDisplayName());
         lore.set(lore.size() - 1, Theme.CLICK_INFO + "Amount: " + this.getAmount());
         itemMeta.setLore(lore);
+    }
+
+    private String getDisplayName() {
+        if (this.getItemMeta() != null && this.getItemMeta().hasDisplayName()) {
+            return this.getItemMeta().getDisplayName();
+        }
+        return this.getItemStack() != null ? this.getItemStack().getType().name() : "Empty";
     }
 }

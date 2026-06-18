@@ -39,9 +39,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class NetworkQuantumStorage extends SlimefunItem implements DistinctiveItem {
 
@@ -93,7 +93,7 @@ public class NetworkQuantumStorage extends SlimefunItem implements DistinctiveIt
     private static final int[] OUTPUT_SLOTS = new int[] { 6, 8 };
     private static final int[] BACKGROUND_SLOTS = new int[] { 9, 10, 11, 12, 14, 15, 16, 17 };
 
-    private static final Map<Location, QuantumCache> CACHES = new HashMap<>();
+    private static final Map<Location, QuantumCache> CACHES = new ConcurrentHashMap<>();
 
     static {
         final ItemMeta itemMeta = NO_ITEM.getItemMeta();
@@ -273,7 +273,10 @@ public class NetworkQuantumStorage extends SlimefunItem implements DistinctiveIt
         final Location location = blockMenu.getLocation();
         final String amountString = BlockStorage.getLocationInfo(location, BS_AMOUNT);
         final String voidString = BlockStorage.getLocationInfo(location, BS_VOID);
-        final int amount = amountString == null ? 0 : Integer.parseInt(amountString);
+        int amount = 0;
+        if (amountString != null) {
+            try { amount = Integer.parseInt(amountString); } catch (NumberFormatException ignored) {}
+        }
         final boolean voidExcess = voidString == null || Boolean.parseBoolean(voidString);
         final ItemStack itemStack = blockMenu.getItemInSlot(ITEM_SLOT);
 
@@ -291,11 +294,13 @@ public class NetworkQuantumStorage extends SlimefunItem implements DistinctiveIt
         } else {
             final ItemStack clone = itemStack.clone();
             final ItemMeta itemMeta = clone.getItemMeta();
-            final List<String> lore = itemMeta.getLore();
-            for (int i = 0; i < 3; i++) {
-                lore.remove(lore.size() - 1);
+            List<String> lore = itemMeta.getLore();
+            if (lore != null) {
+                for (int i = 0; i < 3 && !lore.isEmpty(); i++) {
+                    lore.remove(lore.size() - 1);
+                }
+                itemMeta.setLore(lore.isEmpty() ? null : lore);
             }
-            itemMeta.setLore(lore.isEmpty() ? null : lore);
             clone.setItemMeta(itemMeta);
 
             final QuantumCache cache = new QuantumCache(clone, amount, this.maxAmount, voidExcess);

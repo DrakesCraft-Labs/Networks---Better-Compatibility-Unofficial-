@@ -40,11 +40,43 @@ public class NetworkStorage extends BarrelIdentity {
     public void depositItemStack(ItemStack[] itemsToDeposit) {
         if (BlockStorage.check(this.getLocation()) instanceof NetworkQuantumStorage) {
             final BlockMenu blockMenu = BlockStorage.getInventory(this.getLocation());
+            if (blockMenu == null) return;
             final QuantumCache cache = NetworkQuantumStorage.getCaches().get(this.getLocation());
             if (cache != null) {
                 NetworkQuantumStorage.tryInputItem(blockMenu.getLocation(), itemsToDeposit, cache);
             }
         }
+    }
+
+    @Nullable
+    @Override
+    public ItemStack getItemStack() {
+        final QuantumCache cache = NetworkQuantumStorage.getCaches().get(getLocation());
+        if (cache == null || cache.getItemStack() == null) {
+            return null;
+        }
+        final ItemStack clone = cache.getItemStack().clone();
+        clone.setAmount(1);
+        return clone;
+    }
+
+    @Override
+    public int getAmount() {
+        final QuantumCache cache = NetworkQuantumStorage.getCaches().get(getLocation());
+        if (cache == null) {
+            return 0;
+        }
+
+        long amount = cache.getAmount();
+        final BlockMenu blockMenu = BlockStorage.getInventory(getLocation());
+        if (blockMenu != null) {
+            final ItemStack output = blockMenu.getItemInSlot(NetworkQuantumStorage.OUTPUT_SLOT);
+            if (output != null && getItemStack() != null
+                    && io.github.sefiraat.networks.utils.StackUtils.itemsMatch(this, output, true)) {
+                amount += output.getAmount();
+            }
+        }
+        return amount > Integer.MAX_VALUE ? Integer.MAX_VALUE : (int) amount;
     }
 
 

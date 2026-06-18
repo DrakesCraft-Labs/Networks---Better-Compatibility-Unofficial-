@@ -79,7 +79,12 @@ public class NetworkWirelessReceiver extends NetworkObject {
             return;
         }
 
-        definition.getNode().getRoot().addItemStack(itemStack);
+        final ItemStack leftover = definition.getNode().getRoot().addItemStack(itemStack);
+        if (leftover == null || leftover.getAmount() == 0) {
+            blockMenu.replaceExistingItem(RECEIVED_SLOT, null);
+        } else {
+            blockMenu.replaceExistingItem(RECEIVED_SLOT, leftover);
+        }
 
     }
 

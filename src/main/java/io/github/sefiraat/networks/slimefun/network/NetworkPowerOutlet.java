@@ -74,10 +74,10 @@ public class NetworkPowerOutlet extends NetworkDirectional {
             return;
         }
 
-        final int gen = power < possibleGeneration ? (int) power : possibleGeneration;
-        final int chargeToRemove = (int) (gen * 1.2);
+        final long gen = power < possibleGeneration ? power : possibleGeneration;
+        final long chargeToRemove = (long) (gen * 1.2);
 
-        component.addCharge(targetBlock.getLocation(), gen);
+        component.addCharge(targetBlock.getLocation(), (int) gen);
         root.removeRootPower(chargeToRemove);
     }
 }

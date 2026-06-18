@@ -78,6 +78,10 @@
                             <pattern>org.bstats</pattern>
                             <shadedPattern>io.github.sefiraat.networks.bstats</shadedPattern>
                         </relocation>
+                        <relocation>
+                            <pattern>io.github.bakedlibs.dough</pattern>
+                            <shadedPattern>io.github.thebusybiscuit.slimefun4.libraries.dough</shadedPattern>
+                        </relocation>
                     </relocations>
                     <filters>
                         <filter>

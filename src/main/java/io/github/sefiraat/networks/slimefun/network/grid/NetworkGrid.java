@@ -15,8 +15,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nonnull;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class NetworkGrid extends AbstractGrid {
 
@@ -40,7 +40,7 @@ public class NetworkGrid extends AbstractGrid {
     private static final int PAGE_PREVIOUS = 44;
     private static final int PAGE_NEXT = 53;
 
-    private static final Map<Location, GridCache> CACHE_MAP = new HashMap<>();
+    private static final Map<Location, GridCache> CACHE_MAP = new ConcurrentHashMap<>();
 
     public NetworkGrid(ItemGroup itemGroup, SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe) {
         super(itemGroup, item, recipeType, recipe);
@@ -108,8 +108,9 @@ public class NetworkGrid extends AbstractGrid {
                 });
 
                 for (int displaySlot : getDisplaySlots()) {
-                    menu.replaceExistingItem(displaySlot, null);
-                    menu.addMenuClickHandler(displaySlot, (p, slot, item, action) -> false);
+                    menu.replaceExistingItem(displaySlot, BLANK_SLOT_STACK);
+                    menu.addMenuClickHandler(displaySlot,
+                            (player, slot, item, action) -> handleDisplayClick(player, item, action, menu));
                 }
             }
         };
@@ -147,5 +148,10 @@ public class NetworkGrid extends AbstractGrid {
     @Override
     protected int getFilterSlot() {
         return FILTER;
+    }
+
+    @Override
+    protected void clearCachedState(@Nonnull Location location) {
+        CACHE_MAP.remove(location);
     }
 }

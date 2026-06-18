@@ -4,7 +4,7 @@ public class NodeDefinition {
 
     private final NodeType type;
     private final long timeRegistered;
-    private NetworkNode node;
+    private volatile NetworkNode node;
     private final int charge;
 
     public NodeDefinition(NodeType type) {

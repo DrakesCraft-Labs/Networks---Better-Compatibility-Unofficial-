@@ -42,7 +42,7 @@ import java.util.Map;
 
 public abstract class AbstractGrid extends NetworkObject {
 
-    private static final CustomItemStack BLANK_SLOT_STACK = new CustomItemStack(
+    protected static final CustomItemStack BLANK_SLOT_STACK = new CustomItemStack(
             Material.LIGHT_GRAY_STAINED_GLASS_PANE,
             " ");
 
@@ -70,9 +70,10 @@ public abstract class AbstractGrid extends NetworkObject {
                     return ChatColor.stripColor(slimefunItem.getItemName());
                 } else {
                     ItemMeta itemMeta = itemStackIntegerEntry.getKey().getItemMeta();
-                    return itemMeta.hasDisplayName()
-                            ? ChatColor.stripColor(itemMeta.getDisplayName())
-                            : itemStackIntegerEntry.getKey().getType().name();
+                    if (itemMeta == null || !itemMeta.hasDisplayName()) {
+                        return itemStackIntegerEntry.getKey().getType().name();
+                    }
+                    return ChatColor.stripColor(itemMeta.getDisplayName());
                 }
             });
 
@@ -103,8 +104,10 @@ public abstract class AbstractGrid extends NetworkObject {
                         if (tick <= 1) {
                             final BlockMenu blockMenu = BlockStorage.getInventory(block);
                             addToRegistry(block);
-                            tryAddItem(blockMenu);
-                            updateDisplay(blockMenu);
+                            if (blockMenu != null) {
+                                tryAddItem(blockMenu);
+                                updateDisplay(blockMenu);
+                            }
                         }
                     }
 
@@ -123,11 +126,16 @@ public abstract class AbstractGrid extends NetworkObject {
         }
 
         final NodeDefinition definition = NetworkStorage.getAllNetworkObjects().get(blockMenu.getLocation());
-        if (definition.getNode() == null) {
+        if (definition == null || definition.getNode() == null) {
             return;
         }
 
-        definition.getNode().getRoot().addItemStack(itemStack);
+        final ItemStack leftover = definition.getNode().getRoot().addItemStack(itemStack);
+        if (leftover == null || leftover.getAmount() == 0) {
+            blockMenu.replaceExistingItem(getInputSlot(), null);
+        } else {
+            itemStack.setAmount(leftover.getAmount());
+        }
     }
 
     protected void updateDisplay(@Nonnull BlockMenu blockMenu) {
@@ -185,13 +193,8 @@ public abstract class AbstractGrid extends NetworkObject {
                 itemMeta.setLore(lore);
                 displayStack.setItemMeta(itemMeta);
                 blockMenu.replaceExistingItem(getDisplaySlots()[i], displayStack);
-                blockMenu.addMenuClickHandler(getDisplaySlots()[i], (player, slot, item, action) -> {
-                    retrieveItem(player, definition, item, action, blockMenu);
-                    return false;
-                });
             } else {
                 blockMenu.replaceExistingItem(getDisplaySlots()[i], BLANK_SLOT_STACK);
-                blockMenu.addMenuClickHandler(getDisplaySlots()[i], (p, slot, item, action) -> false);
             }
         }
     }
@@ -199,8 +202,16 @@ public abstract class AbstractGrid extends NetworkObject {
     protected void clearDisplay(BlockMenu blockMenu) {
         for (int displaySlot : getDisplaySlots()) {
             blockMenu.replaceExistingItem(displaySlot, BLANK_SLOT_STACK);
-            blockMenu.addMenuClickHandler(displaySlot, (p, slot, item, action) -> false);
         }
+    }
+
+    protected boolean handleDisplayClick(Player player, ItemStack itemStack, ClickAction action,
+            BlockMenu blockMenu) {
+        final NodeDefinition definition = NetworkStorage.getAllNetworkObjects().get(blockMenu.getLocation());
+        if (definition != null && definition.getNode() != null) {
+            retrieveItem(player, definition, itemStack, action, blockMenu);
+        }
+        return false;
     }
 
     @Nonnull
@@ -256,6 +267,9 @@ public abstract class AbstractGrid extends NetworkObject {
         final ItemStack clone = itemStack.clone();
         final ItemMeta cloneMeta = clone.getItemMeta();
         final List<String> cloneLore = cloneMeta.getLore();
+        if (cloneLore == null || cloneLore.size() < 2) {
+            return;
+        }
 
         cloneLore.remove(cloneLore.size() - 1);
         cloneLore.remove(cloneLore.size() - 1);
@@ -309,7 +323,9 @@ public abstract class AbstractGrid extends NetworkObject {
     private void setCursor(Player player, ItemStack cursor, ItemStack requestingStack) {
         if (requestingStack != null) {
             if (cursor.getType() != Material.AIR) {
-                requestingStack.setAmount(cursor.getAmount() + 1);
+                requestingStack.setAmount(Math.min(
+                        cursor.getAmount() + requestingStack.getAmount(),
+                        requestingStack.getType().getMaxStackSize()));
             }
             player.setItemOnCursor(requestingStack);
         }

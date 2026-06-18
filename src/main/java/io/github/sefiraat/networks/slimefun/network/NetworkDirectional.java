@@ -167,7 +167,14 @@ public abstract class NetworkDirectional extends NetworkObject {
         BlockFace direction = SELECTED_DIRECTION_MAP.get(blockMenu.getLocation().clone());
 
         if (direction == null) {
-            direction = BlockFace.valueOf(BlockStorage.getLocationInfo(blockMenu.getLocation(), DIRECTION));
+            final String stored = BlockStorage.getLocationInfo(blockMenu.getLocation(), DIRECTION);
+            if (stored == null) {
+                // Block placed before direction key existed; set default
+                direction = BlockFace.SELF;
+                BlockStorage.addBlockInfo(blockMenu.getLocation(), DIRECTION, BlockFace.SELF.name());
+            } else {
+                direction = BlockFace.valueOf(stored);
+            }
             SELECTED_DIRECTION_MAP.put(blockMenu.getLocation().clone(), direction);
         }
         return direction;
@@ -270,7 +277,7 @@ public abstract class NetworkDirectional extends NetworkObject {
         if (targetMenu != null) {
             final Location location = targetMenu.getLocation();
             final SlimefunItem item = BlockStorage.check(location);
-            if (item.canUse(player, true)
+            if (item != null && item.canUse(player, true)
                     && Slimefun.getProtectionManager().hasPermission(player, blockMenu.getLocation(),
                             Interaction.INTERACT_BLOCK)) {
                 targetMenu.open(player);
@@ -282,12 +289,18 @@ public abstract class NetworkDirectional extends NetworkObject {
     public void setDirection(BlockMenu blockMenu, BlockFace blockFace) {
         SELECTED_DIRECTION_MAP.put(blockMenu.getLocation().clone(), blockFace);
         BlockStorage.addBlockInfo(blockMenu.getBlock(), DIRECTION, blockFace.name());
+        NetworkController.markDirty(blockMenu.getLocation());
+    }
+
+    @Override
+    protected void clearCachedState(@Nonnull Location location) {
+        SELECTED_DIRECTION_MAP.remove(location);
     }
 
     @Nonnull
     protected int[] getBackgroundSlots() {
         return new int[] {
-                0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 16, 17, 18, 19, 21, 23, 24, 25, 26, 27, 28, 29, 21, 31,
+                0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 16, 17, 18, 19, 21, 23, 24, 25, 26, 27, 28, 29, 30, 31,
                 32, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44
         };
     }

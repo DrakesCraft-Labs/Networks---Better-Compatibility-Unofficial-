@@ -54,8 +54,12 @@ public class NetworkGrabber extends NetworkDirectional {
             final ItemStack itemStack = targetMenu.getItemInSlot(slot);
 
             if (itemStack != null && itemStack.getType() != Material.AIR) {
-                int before = itemStack.getAmount();
-                definition.getNode().getRoot().addItemStack(itemStack);
+                final int before = itemStack.getAmount();
+                final ItemStack leftover = definition.getNode().getRoot().addItemStack(itemStack);
+                // If network is full, put the leftover back in the source slot
+                if (leftover != null && leftover.getAmount() > 0) {
+                    itemStack.setAmount(leftover.getAmount());
+                }
                 if (definition.getNode().getRoot().isDisplayParticles() && itemStack.getAmount() < before) {
                     showParticle(blockMenu.getLocation(), direction);
                 }
