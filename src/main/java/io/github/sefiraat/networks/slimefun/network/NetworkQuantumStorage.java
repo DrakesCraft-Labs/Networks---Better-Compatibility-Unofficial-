@@ -11,7 +11,6 @@ import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
-import io.github.thebusybiscuit.slimefun4.core.attributes.DistinctiveItem;
 import io.github.thebusybiscuit.slimefun4.core.handlers.BlockBreakHandler;
 import io.github.thebusybiscuit.slimefun4.core.handlers.BlockPlaceHandler;
 import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
@@ -43,7 +42,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class NetworkQuantumStorage extends SlimefunItem implements DistinctiveItem {
+public class NetworkQuantumStorage extends SlimefunItem {
 
     private static final int[] SIZES = new int[] {
             4096,
@@ -456,7 +455,6 @@ public class NetworkQuantumStorage extends SlimefunItem implements DistinctiveIt
         return SIZES;
     }
 
-    @Override
     public boolean canStack(@Nonnull ItemMeta sfItemMeta, @Nonnull ItemMeta itemMeta) {
         return sfItemMeta.getPersistentDataContainer().equals(itemMeta.getPersistentDataContainer());
     }
