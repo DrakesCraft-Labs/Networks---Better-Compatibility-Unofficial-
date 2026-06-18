@@ -38,7 +38,7 @@ import io.github.sefiraat.networks.slimefun.tools.NetworkWirelessConfigurator;
 import io.github.sefiraat.networks.utils.StackUtils;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.implementation.SlimefunItems;
-import io.github.thebusybiscuit.slimefun4.implementation.items.blocks.UnplaceableBlock;
+import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import lombok.experimental.UtilityClass;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -46,18 +46,18 @@ import org.bukkit.inventory.ItemStack;
 @UtilityClass
 public class NetworkSlimefunItems {
 
-        public static UnplaceableBlock SYNTHETIC_EMERALD_SHARD;
-        public static UnplaceableBlock OPTIC_GLASS;
-        public static UnplaceableBlock OPTIC_CABLE;
-        public static UnplaceableBlock OPTIC_STAR;
-        public static UnplaceableBlock RADIOACTIVE_OPTIC_STAR;
-        public static UnplaceableBlock SHRINKING_BASE;
-        public static UnplaceableBlock SIMPLE_NANOBOTS;
-        public static UnplaceableBlock ADVANCED_NANOBOTS;
-        public static UnplaceableBlock AI_CORE;
-        public static UnplaceableBlock EMPOWERED_AI_CORE;
-        public static UnplaceableBlock PRISTINE_AI_CORE;
-        public static UnplaceableBlock INTERDIMENSIONAL_PRESENCE;
+        public static SlimefunItem SYNTHETIC_EMERALD_SHARD;
+        public static SlimefunItem OPTIC_GLASS;
+        public static SlimefunItem OPTIC_CABLE;
+        public static SlimefunItem OPTIC_STAR;
+        public static SlimefunItem RADIOACTIVE_OPTIC_STAR;
+        public static SlimefunItem SHRINKING_BASE;
+        public static SlimefunItem SIMPLE_NANOBOTS;
+        public static SlimefunItem ADVANCED_NANOBOTS;
+        public static SlimefunItem AI_CORE;
+        public static SlimefunItem EMPOWERED_AI_CORE;
+        public static SlimefunItem PRISTINE_AI_CORE;
+        public static SlimefunItem INTERDIMENSIONAL_PRESENCE;
 
         public static NetworkController NETWORK_CONTROLLER;
         public static NetworkBridge NETWORK_BRIDGE;
@@ -123,7 +123,7 @@ public class NetworkSlimefunItems {
                 Networks plugin = Networks.getInstance();
                 final ItemStack glass = new ItemStack(Material.GLASS);
 
-                SYNTHETIC_EMERALD_SHARD = new UnplaceableBlock(
+                SYNTHETIC_EMERALD_SHARD = new SlimefunItem(
                                 NetworksItemGroups.MATERIALS,
                                 NetworksSlimefunItemStacks.SYNTHETIC_EMERALD_SHARD,
                                 RecipeType.ENHANCED_CRAFTING_TABLE,
@@ -134,7 +134,7 @@ public class NetworkSlimefunItems {
                                 },
                                 StackUtils.getAsQuantity(NetworksSlimefunItemStacks.SYNTHETIC_EMERALD_SHARD, 3));
 
-                OPTIC_GLASS = new UnplaceableBlock(
+                OPTIC_GLASS = new SlimefunItem(
                                 NetworksItemGroups.MATERIALS,
                                 NetworksSlimefunItemStacks.OPTIC_GLASS,
                                 RecipeType.ENHANCED_CRAFTING_TABLE,
@@ -145,7 +145,7 @@ public class NetworkSlimefunItems {
                                 },
                                 StackUtils.getAsQuantity(NetworksSlimefunItemStacks.OPTIC_GLASS, 8));
 
-                OPTIC_CABLE = new UnplaceableBlock(
+                OPTIC_CABLE = new SlimefunItem(
                                 NetworksItemGroups.MATERIALS,
                                 NetworksSlimefunItemStacks.OPTIC_CABLE,
                                 RecipeType.ENHANCED_CRAFTING_TABLE,
@@ -157,7 +157,7 @@ public class NetworkSlimefunItems {
                                 },
                                 StackUtils.getAsQuantity(NetworksSlimefunItemStacks.OPTIC_CABLE, 16));
 
-                OPTIC_STAR = new UnplaceableBlock(
+                OPTIC_STAR = new SlimefunItem(
                                 NetworksItemGroups.MATERIALS,
                                 NetworksSlimefunItemStacks.OPTIC_STAR,
                                 RecipeType.ENHANCED_CRAFTING_TABLE,
@@ -168,7 +168,7 @@ public class NetworkSlimefunItems {
                                                 OPTIC_GLASS.getItem(), OPTIC_CABLE.getItem(), OPTIC_GLASS.getItem()
                                 });
 
-                RADIOACTIVE_OPTIC_STAR = new UnplaceableBlock(
+                RADIOACTIVE_OPTIC_STAR = new SlimefunItem(
                                 NetworksItemGroups.MATERIALS,
                                 NetworksSlimefunItemStacks.RADIOACTIVE_OPTIC_STAR,
                                 RecipeType.ENHANCED_CRAFTING_TABLE,
@@ -180,7 +180,7 @@ public class NetworkSlimefunItems {
                                                 SlimefunItems.BLISTERING_INGOT_3
                                 });
 
-                SHRINKING_BASE = new UnplaceableBlock(
+                SHRINKING_BASE = new SlimefunItem(
                                 NetworksItemGroups.MATERIALS,
                                 NetworksSlimefunItemStacks.SHRINKING_BASE,
                                 RecipeType.ENHANCED_CRAFTING_TABLE,
@@ -195,7 +195,7 @@ public class NetworkSlimefunItems {
                                                 SlimefunItems.CORINTHIAN_BRONZE_INGOT
                                 });
 
-                SIMPLE_NANOBOTS = new UnplaceableBlock(
+                SIMPLE_NANOBOTS = new SlimefunItem(
                                 NetworksItemGroups.MATERIALS,
                                 NetworksSlimefunItemStacks.SIMPLE_NANOBOTS,
                                 RecipeType.ENHANCED_CRAFTING_TABLE,
@@ -204,7 +204,7 @@ public class NetworkSlimefunItems {
                                 },
                                 StackUtils.getAsQuantity(NetworksSlimefunItemStacks.SIMPLE_NANOBOTS, 4));
 
-                ADVANCED_NANOBOTS = new UnplaceableBlock(
+                ADVANCED_NANOBOTS = new SlimefunItem(
                                 NetworksItemGroups.MATERIALS,
                                 NetworksSlimefunItemStacks.ADVANCED_NANOBOTS,
                                 RecipeType.ENHANCED_CRAFTING_TABLE,
@@ -213,7 +213,7 @@ public class NetworkSlimefunItems {
                                 },
                                 StackUtils.getAsQuantity(NetworksSlimefunItemStacks.ADVANCED_NANOBOTS, 4));
 
-                AI_CORE = new UnplaceableBlock(
+                AI_CORE = new SlimefunItem(
                                 NetworksItemGroups.MATERIALS,
                                 NetworksSlimefunItemStacks.AI_CORE,
                                 RecipeType.ENHANCED_CRAFTING_TABLE,
@@ -226,7 +226,7 @@ public class NetworkSlimefunItems {
                                                 SlimefunItems.BASIC_CIRCUIT_BOARD
                                 });
 
-                EMPOWERED_AI_CORE = new UnplaceableBlock(
+                EMPOWERED_AI_CORE = new SlimefunItem(
                                 NetworksItemGroups.MATERIALS,
                                 NetworksSlimefunItemStacks.EMPOWERED_AI_CORE,
                                 RecipeType.ENHANCED_CRAFTING_TABLE,
@@ -239,7 +239,7 @@ public class NetworkSlimefunItems {
                                                 SlimefunItems.ADVANCED_CIRCUIT_BOARD
                                 });
 
-                PRISTINE_AI_CORE = new UnplaceableBlock(
+                PRISTINE_AI_CORE = new SlimefunItem(
                                 NetworksItemGroups.MATERIALS,
                                 NetworksSlimefunItemStacks.PRISTINE_AI_CORE,
                                 RecipeType.ENHANCED_CRAFTING_TABLE,
@@ -252,7 +252,7 @@ public class NetworkSlimefunItems {
                                                 SlimefunItems.NEPTUNIUM
                                 });
 
-                INTERDIMENSIONAL_PRESENCE = new UnplaceableBlock(
+                INTERDIMENSIONAL_PRESENCE = new SlimefunItem(
                                 NetworksItemGroups.MATERIALS,
                                 NetworksSlimefunItemStacks.INTERDIMENSIONAL_PRESENCE,
                                 RecipeType.ENHANCED_CRAFTING_TABLE,
