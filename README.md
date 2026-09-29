@@ -1,3 +1,5 @@
+> ⚠️ **ARCHIVADO / CONSOLIDADO EN NetworksV6-drake.** Todo el desarrollo activo de Networks para Paper 1.21.11+ vive en [NetworksV6-drake](https://github.com/DrakesCraft-Labs/NetworksV6-drake) (canónico en producción). Este repositorio queda de solo lectura.
+
 <p align="center">
   <img src="https://raw.githubusercontent.com/DrakesCraft-Labs/Networks---Better-Compatibility-Unofficial-/main/banner.svg" width="100%" alt="NETWORKS BETTER COMPATIBILITY Animated Banner" />
 </p>
