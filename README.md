@@ -1,4 +1,6 @@
-> ⚠️ **ARCHIVADO / CONSOLIDADO EN NetworksV6-drake.** Todo el desarrollo activo de Networks para Paper 1.21.11+ vive en [NetworksV6-drake](https://github.com/DrakesCraft-Labs/NetworksV6-drake) (canónico en producción). Este repositorio queda de solo lectura.
+> ⚠️ **DEPRECATED & ARCHIVED — DO NOT USE IN PRODUCTION / NO USAR EN PRODUCCIÓN**  
+> **ES:** Este plugin **NO SE USA EN PRODUCCIÓN** en DrakesCraft. Fue descartado y reemplazado en su totalidad por **[MultiverseNets](https://github.com/DrakesCraft-Labs/MultiverseNets)** (logística digital soberana de Chagui68) y **[NetworksV6-drake](https://github.com/DrakesCraft-Labs/NetworksV6-drake)** (para Slimefun). Este repositorio se mantiene **exclusivamente como archivo histórico y de mantenimiento pasivo** si alguien envía pull requests o reporta errores externos.  
+> **EN:** This plugin is **NOT USED IN PRODUCTION**. It has been completely superseded by **[MultiverseNets](https://github.com/DrakesCraft-Labs/MultiverseNets)** and **[NetworksV6-drake](https://github.com/DrakesCraft-Labs/NetworksV6-drake)**. Kept strictly for legacy maintenance.
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/DrakesCraft-Labs/Networks---Better-Compatibility-Unofficial-/main/banner.svg" width="100%" alt="NETWORKS BETTER COMPATIBILITY Animated Banner" />
